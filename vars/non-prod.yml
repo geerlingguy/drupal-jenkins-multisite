@@ -1,0 +1,21 @@
+---
+# Jenkins configuration.
+jenkins_admin_username: admin
+jenkins_admin_password: admin
+
+# Nginx proxy configuration.
+nginx_remove_default_vhost: true
+nginx_extra_http_options: |
+  ignore_invalid_headers off;
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "localhost"
+    extra_parameters: |
+      location / {
+          include /etc/nginx/proxy_params;
+          proxy_pass          http://localhost:8080;
+          proxy_read_timeout  90s;
+      }
+
+# Certbot configuration.
+certbot_certs: []

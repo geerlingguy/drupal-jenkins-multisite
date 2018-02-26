@@ -1,0 +1,14 @@
+---
+version: '3'
+services:
+  jenkins:
+    image: geerlingguy/docker-ubuntu1604-ansible:latest
+    container_name: drupal-jenkins
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - .:/etc/ansible/playbook:rw,delegated
+      - ./jenkins_home:/var/lib/jenkins:rw,delegated
+    privileged: true
+    command: /lib/systemd/systemd

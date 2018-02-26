@@ -1,2 +1,8 @@
-# Ignore Galaxy roles.
+# System files.
+.DS_Store
+
+# Jenkins files.
+jenkins_home
+
+# Galaxy roles.
 roles/geerlingguy.*

@@ -9,6 +9,8 @@ firewall_allowed_tcp_ports:
 firewall_disable_ufw: True
 
 # Jenkins configuration.
+jenkins_admin_username: admin
+jenkins_admin_password: joGfDq2zFuJmiseJ3uRZ
 jenkins_package_state: latest
 jenkins_http_port: "8080"
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York"
@@ -60,8 +62,12 @@ certbot_repo: https://github.com/certbot/certbot.git
 certbot_version: master
 certbot_keep_updated: yes
 certbot_auto_renew_options: "--quiet --no-self-upgrade --pre-hook 'service nginx stop' --post-hook 'service nginx start'"
-# certbot_certificate:
+# certbot_create_if_missing: yes
+# certbot_create_method: standalone
+# certbot_admin_email: https@drupal.test
+# certbot_certs:
 #   email: "https@drupal.test"
-#   webroot: "/var/cache/jenkins/war"
 #   domains:
 #     - "{{ nginx_proxy_vhostname }}"
+# certbot_create_standalone_stop_services:
+#   - nginx

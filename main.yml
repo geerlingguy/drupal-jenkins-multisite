@@ -20,6 +20,10 @@
       apt: update_cache=yes cache_valid_time=600
       tags: ['always']
 
+    - name: Include non-prod override vars when not in production.
+      include_vars: vars/non-prod.yml
+      when: jenkins_test_mode
+
     - name: Ensure OpenSSH is installed.
       apt: 'name="{{ item }}" state=present'
       with_items:
@@ -41,15 +45,17 @@
 
     - role: geerlingguy.security
       tags: ['security']
+      when: not jenkins_test_mode
 
     - role: geerlingguy.firewall
       tags: ['firewall', 'security']
+      when: not jenkins_test_mode
 
     - role: geerlingguy.certbot
       tags: ['certbot']
 
     - role: geerlingguy.pip
-      tags: ['f1', 'pip', 'ssl']
+      tags: ['pip', 'ssl']
 
     - role: geerlingguy.nginx
       tags: ['nginx']

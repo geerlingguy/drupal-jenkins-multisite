@@ -6,7 +6,17 @@ TODO.
 
 ## Local Setup
 
-TODO.
+### Prerequisites
+
+  - Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
+  - Install [Docker](https://docs.docker.com/install/)
+
+### Guide
+
+  1. Run `docker-compose up -d`
+  2. Run `docker exec --tty drupal-jenkins bash -c /etc/ansible/playbook/scripts/run-playbook.sh`
+
+After the playbook completes, visit `http://localhost:8080/`. The default login is `admin`:`admin`.
 
 ## License
 

@@ -1,22 +1,23 @@
 ---
 services: docker
 
+env:
+  - JENKINS_ENVIRONMENT=travis
+
 script:
-  - container_id=test
   - set -e
   # Start a Docker container.
-  - 'docker run --detach --volume=${PWD}:/etc/ansible/playbook:rw --name ${container_id} --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd'
+  - 'docker-compose up -d'
 
-  # Install dependencies.
-  - 'docker exec --tty ${container_id} env TERM=xterm bash -c "cd /etc/ansible/playbook; ansible-galaxy install -r requirements.yml"'
+  # Install dependencies and run Ansible playbook.
+  - 'docker exec --tty drupal-jenkins env TERM=xterm bash -c "cd /etc/ansible/playbook; ansible-galaxy install -r requirements.yml"'
 
   # Run Ansible playbook (first with a syntax check, then for real).
-  - 'docker exec --tty ${container_id} env TERM=xterm bash -c "cd /etc/ansible/playbook; ansible-playbook -i inventory/travis main.yml --syntax-check"'
-  - 'docker exec --tty ${container_id} env TERM=xterm bash -c "cd /etc/ansible/playbook; ansible-playbook -i inventory/travis main.yml --extra-vars \"{jenkins_test_mode: True}\""'
+  - 'docker exec --tty drupal-jenkins bash -c /etc/ansible/playbook/scripts/run-playbook.sh'
 
   # Run the playbook again to check for idempotence.
   - idempotence=$(mktemp)
-  - 'docker exec ${container_id} bash -c "cd /etc/ansible/playbook; ansible-playbook -i inventory/travis main.yml --extra-vars \"{jenkins_test_mode: True}\"" | tee -a ${idempotence}'
+  - 'docker exec drupal-jenkins bash -c "cd /etc/ansible/playbook; ansible-playbook -i inventory/${JENKINS_ENVIRONMENT} main.yml --extra-vars \"{jenkins_test_mode: True}\"" | tee -a ${idempotence}'
   - >
     tail ${idempotence}
     | grep -q 'changed=0.*failed=0'
