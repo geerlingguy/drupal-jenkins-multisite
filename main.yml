@@ -1,0 +1,55 @@
+---
+- hosts: jenkins
+  become: yes
+  gather_facts: no
+
+  vars_files:
+    - vars/config.yml
+
+  pre_tasks:
+    # See: https://github.com/geerlingguy/drupal-vm/issues/1245
+    - name: Install Python if it's not available.
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+
+    - action: setup
+      tags: ['always']
+
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      tags: ['always']
+
+    - name: Ensure OpenSSH is installed.
+      apt: 'name="{{ item }}" state=present'
+      with_items:
+        - openssh-server
+        - openssh-client
+
+  roles:
+    - role: geerlingguy.git
+      tags: ['git']
+
+    - role: geerlingguy.java
+      tags: ['java']
+
+    - role: geerlingguy.jenkins
+      tags: ['jenkins']
+
+    - role: geerlingguy.ansible
+      tags: ['ansible']
+
+    - role: geerlingguy.security
+      tags: ['security']
+
+    - role: geerlingguy.firewall
+      tags: ['firewall', 'security']
+
+    - role: geerlingguy.certbot
+      tags: ['certbot']
+
+    - role: geerlingguy.pip
+      tags: ['f1', 'pip', 'ssl']
+
+    - role: geerlingguy.nginx
+      tags: ['nginx']
