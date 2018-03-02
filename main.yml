@@ -28,6 +28,7 @@
       include_vars: "{{ item }}"
       with_first_found:
         - vars/secrets.yml
+      skip: True
       when: not jenkins_test_mode
 
     - name: Ensure OpenSSH is installed.
