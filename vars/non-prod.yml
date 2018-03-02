@@ -1,6 +1,5 @@
 ---
 # Jenkins configuration.
-jenkins_admin_username: admin
 jenkins_admin_password: admin
 
 # Nginx proxy configuration.

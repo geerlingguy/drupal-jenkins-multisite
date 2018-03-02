@@ -8,22 +8,21 @@ firewall_allowed_tcp_ports:
   - "80"
 firewall_disable_ufw: True
 
+# Security configuration.
+security_ssh_permit_root_login: True
+
 # Jenkins configuration.
 jenkins_admin_username: admin
-jenkins_admin_password: joGfDq2zFuJmiseJ3uRZ
+# This is set in non-prod.yml for non-prod, and secrets.yml for prod.
+# jenkins_admin_password: ''
 jenkins_package_state: latest
 jenkins_http_port: "8080"
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York"
 jenkins_plugins:
   - git
-  - ssh-agent
   - ansicolor
   - role-strategy
-  - build-timestamp
-  - cloudbees-folder
-  - cucumber-testresult-plugin
   - parameterized-scheduler
-  - postbuild-task
 
 # Jenkins configuration for Nginx.
 jenkins_init_changes:
@@ -31,30 +30,45 @@ jenkins_init_changes:
     value: "--prefix={{ jenkins_url_prefix }} --httpListenAddress=127.0.0.1"
 
 # Nginx proxy configuration.
-nginx_proxy_vhostname: "jenkins.drupal.test"
-# nginx_remove_default_vhost: true
-# nginx_extra_http_options: |
-#   ignore_invalid_headers off;
-# nginx_vhosts:
-#   - listen: "80 default_server"
-#     server_name: "_"
-#     extra_parameters: |
-#       return 301 https://$host$request_uri;
-#   - listen: "443 ssl default_server"
-#     server_name: "{{ nginx_proxy_vhostname }}"
-#     extra_parameters: |
-#       ssl_certificate /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/fullchain.pem;
-#       ssl_certificate_key /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/privkey.pem;
-#       ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/fullchain.pem;
-#       include /etc/nginx/snippets/tls.conf;
-#
-#       location / {
-#           include /etc/nginx/proxy_params;
-#           proxy_pass          http://localhost:8080;
-#           proxy_read_timeout  90s;
-#           # Fix potential "It appears that your reverse proxy set up is broken" error.
-#           proxy_redirect      http://localhost:8080 {{ nginx_proxy_vhostname }};
-#       }
+nginx_proxy_vhostname: "drupal-jenkins-multisite.example.com"
+nginx_remove_default_vhost: true
+nginx_extra_http_options: |
+  ignore_invalid_headers off;
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "_"
+    extra_parameters: |
+      return 301 https://$host$request_uri;
+  - listen: "443 ssl default_server"
+    server_name: "{{ nginx_proxy_vhostname }}"
+    extra_parameters: |
+      ssl_certificate /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/privkey.pem;
+      ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_proxy_vhostname }}/fullchain.pem;
+
+      ssl_session_timeout 1d;
+      ssl_session_cache shared:SSL:50m;
+      ssl_session_tickets off;
+
+      ssl_protocols TLSv1.2;
+      ssl_ciphers EECDH+AESGCM:EECDH+AES;
+      ssl_ecdh_curve secp384r1;
+      ssl_prefer_server_ciphers on;
+
+      ssl_stapling on;
+      ssl_stapling_verify on;
+
+      add_header Strict-Transport-Security "max-age=15768000; includeSubdomains; preload";
+      add_header X-Frame-Options DENY;
+      add_header X-Content-Type-Options nosniff;
+
+      location / {
+          include /etc/nginx/proxy_params;
+          proxy_pass          http://localhost:8080;
+          proxy_read_timeout  90s;
+          # Fix potential "It appears that your reverse proxy set up is broken" error.
+          proxy_redirect      http://localhost:8080 {{ nginx_proxy_vhostname }};
+      }
 
 # Certbot configuration.
 certbot_install_from_source: yes
@@ -62,12 +76,12 @@ certbot_repo: https://github.com/certbot/certbot.git
 certbot_version: master
 certbot_keep_updated: yes
 certbot_auto_renew_options: "--quiet --no-self-upgrade --pre-hook 'service nginx stop' --post-hook 'service nginx start'"
-# certbot_create_if_missing: yes
-# certbot_create_method: standalone
-# certbot_admin_email: https@drupal.test
-# certbot_certs:
-#   email: "https@drupal.test"
-#   domains:
-#     - "{{ nginx_proxy_vhostname }}"
-# certbot_create_standalone_stop_services:
-#   - nginx
+certbot_create_if_missing: yes
+certbot_create_method: standalone
+certbot_admin_email: https@example.com
+certbot_certs:
+  - email: "https@example.com"
+    domains:
+      - "{{ nginx_proxy_vhostname }}"
+certbot_create_standalone_stop_services:
+  - nginx

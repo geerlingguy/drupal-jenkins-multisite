@@ -6,3 +6,9 @@ jenkins_home
 
 # Galaxy roles.
 roles/geerlingguy.*
+
+# Secrets (technically can include this if you want).
+vars/secrets.yml
+
+# Prod inventory.
+inventory/prod

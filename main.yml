@@ -24,6 +24,12 @@
       include_vars: vars/non-prod.yml
       when: jenkins_test_mode
 
+    - name: Include prod secrets when in production.
+      include_vars: "{{ item }}"
+      with_first_found:
+        - vars/secrets.yml
+      when: not jenkins_test_mode
+
     - name: Ensure OpenSSH is installed.
       apt: 'name="{{ item }}" state=present'
       with_items:
