@@ -9,4 +9,4 @@ cd /etc/ansible/playbook
 ansible-galaxy install -r requirements.yml
 
 # Run the playbook.
-ansible-playbook -i "inventory/$1" main.yml --extra-vars "{jenkins_test_mode: True}"
+ansible-playbook -i "inventory/$JENKINS_ENVIRONMENT" main.yml --extra-vars "{jenkins_test_mode: True}"
