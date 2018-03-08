@@ -15,7 +15,7 @@ This repository contains a working example of a Jenkins server set up to manage 
   1. Run `docker-compose up -d`
   2. Run `docker exec --tty drupal-jenkins bash -c /etc/ansible/playbook/scripts/run-playbook.sh`
 
-After the playbook completes, visit `http://localhost:8080/`. The default login is `admin`:`admin`.
+After the playbook completes, visit `http://localhost/`. The default login is `admin`:`admin`.
 
 ## Production Setup
 
