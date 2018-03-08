@@ -29,6 +29,7 @@ jenkins_plugins:
   - ansicolor
   - role-strategy
   - parameterized-scheduler
+  - timestamper
 
 # Jenkins configuration for Nginx.
 jenkins_init_changes:
