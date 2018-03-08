@@ -1,0 +1,10 @@
+[defaults]
+nocows = 1
+inventory = /etc/ansible/hosts
+forks = 20
+retry_files_enabled = False
+
+[ssh_connection]
+pipelining = True
+control_path = /tmp/ansible-ssh-%%h-%%p-%%r
+host_key_checking = False

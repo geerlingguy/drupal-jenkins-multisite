@@ -1,6 +1,12 @@
 ---
 jenkins_test_mode: False
 
+# Drupal configuration.
+inventory_alias: mm
+inventory_hostname: midwesternmac.com
+inventory_vars: |
+  ansible_ssh_user=geerlingguy
+
 # Firewall configuration.
 firewall_allowed_tcp_ports:
   - "22"

@@ -65,3 +65,22 @@
 
     - role: geerlingguy.nginx
       tags: ['nginx']
+
+  tasks:
+    - name: Copy Ansible configs into place.
+      template:
+        src: templates/{{ item.src }}
+        dest: /etc/ansible/{{ item.dest }}
+      with_items:
+        - src: ansible.cfg.j2
+          dest: ansible.cfg
+        - src: jenkins-ansible-inventory.j2
+          dest: hosts
+
+    - name: Copy Jenkins jobs into place.
+      copy:
+        src: templates/jobs
+        dest: /var/lib/jenkins/jobs
+      notify: restart jenkins
+      become: yes
+      become_user: jenkins
