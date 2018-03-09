@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Deploy new code to midwesternmac.com.</description>
+  <description>Deploy new code to the multisite.</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <scm class="hudson.scm.NullSCM"/>
@@ -13,16 +13,24 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command># Update code via Git.
+      <command>#!/bin/bash
+
+# Update code via Git.
 ansible mm -m git -a \
 &quot;repo=ssh://geerlingguy@git.midwesternmac.com/home/geerlingguy/git/drupal7.git \
 dest=/home/geerlingguy/domains/drupal7 \
 version=master \
 update=yes&quot;
 
-# Run database updates, then clear caches.
-ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=www.midwesternmac.com updb -y&quot;
-ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=www.midwesternmac.com cc all&quot;</command>
+websites=( &quot;www.midwesternmac.com&quot; &quot;www.jeffgeerling.com&quot; &quot;cureofarsparish.org&quot; &quot;beforeidostl.com&quot; &quot;stpatricksjonesburg.org&quot; &quot;ecclesiadomestica.org&quot;)
+for website in &quot;${websites[@]}&quot;
+do
+  # Run database updates, then clear caches.
+  echo &quot;Running updb and cc for website: $website&quot;
+  ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=$website updb -y&quot;
+  ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=$website cc all&quot;
+done
+</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>

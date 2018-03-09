@@ -3,7 +3,26 @@
   <actions/>
   <description>Runs cron via drush remotely on midwesternmac.com.</description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>website</name>
+          <description></description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>www.midwesternmac.com</string>
+              <string>www.jeffgeerling.com</string>
+              <string>cureofarsparish.org</string>
+              <string>beforeidostl.com</string>
+              <string>stpatricksjonesburg.org</string>
+              <string>ecclesiadomestica.org</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <scm class="hudson.scm.NullSCM"/>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -13,7 +32,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=www.midwesternmac.com core-cron&quot;</command>
+      <command>ansible mm -a &quot;drush --root=/home/geerlingguy/domains/drupal7 --uri=$website core-cron&quot;</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
