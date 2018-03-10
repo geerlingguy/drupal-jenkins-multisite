@@ -46,6 +46,9 @@
     - role: geerlingguy.jenkins
       tags: ['jenkins']
 
+    - role: geerlingguy.docker
+      tags: ['docker']
+
     - role: geerlingguy.ansible
       tags: ['ansible']
 
@@ -76,6 +79,7 @@
           dest: ansible.cfg
         - src: jenkins-ansible-inventory.j2
           dest: hosts
+      tags: ['ansible']
 
     - name: Copy Jenkins jobs into place.
       copy:
@@ -84,3 +88,10 @@
       notify: restart jenkins
       become: yes
       become_user: jenkins
+      tags: ['jenkins']
+
+    - name: Add Jenkins user to Docker group.
+      user:
+        name: jenkins
+        groups: docker
+        append: yes

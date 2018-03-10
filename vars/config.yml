@@ -30,6 +30,7 @@ jenkins_plugins:
   - role-strategy
   - parameterized-scheduler
   - timestamper
+  - ws-cleanup
 
 # Jenkins configuration for Nginx.
 jenkins_init_changes:
