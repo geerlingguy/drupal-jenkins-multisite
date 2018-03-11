@@ -31,6 +31,7 @@ jenkins_plugins:
   - parameterized-scheduler
   - timestamper
   - ws-cleanup
+  - ssh-agent
 
 # Jenkins configuration for Nginx.
 jenkins_init_changes:
