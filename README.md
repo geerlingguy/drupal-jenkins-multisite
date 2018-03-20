@@ -28,8 +28,7 @@ In this example, we'll install Jenkins on a DigitalOcean Droplet (a VPS), but yo
   - Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
   - Set up your Ansible Vault secrets:
     1. Create a file at `~/.ansible/drupal-jenkins-vault-password.txt` and put in a unique, random, securely-generated password (e.g. `MZjDUcMsUeKpq9vaXoCyYDwFNrMF3E`).
-    2. Run the command: `ansible-vault create vars/secrets.yml --vault-passw
-ord-file=~/.ansible/drupal-jenkins-vault-password.txt`, and save the file that is generated (it's okay if it's empty right now).
+    2. Run the command: `ansible-vault create vars/secrets.yml --vault-password-file=~/.ansible/drupal-jenkins-vault-password.txt`, and save the file that is generated (it's okay if it's empty right now).
 
 **Guide**:
 
