@@ -84,7 +84,7 @@
     - name: Copy Jenkins jobs into place.
       copy:
         src: templates/jobs
-        dest: /var/lib/jenkins/jobs
+        dest: /var/lib/jenkins
       notify: restart jenkins
       become: yes
       become_user: jenkins
