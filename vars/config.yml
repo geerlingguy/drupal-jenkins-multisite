@@ -15,7 +15,7 @@ firewall_allowed_tcp_ports:
 firewall_disable_ufw: True
 
 # Security configuration.
-security_ssh_permit_root_login: True
+security_ssh_permit_root_login: 'yes'
 
 # Jenkins configuration.
 jenkins_admin_username: admin
