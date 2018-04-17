@@ -37,6 +37,8 @@ jenkins_plugins:
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
     value: "--prefix={{ jenkins_url_prefix }} --httpListenAddress=127.0.0.1"
+  - option: "{{ jenkins_java_options_env_var }}"
+    value: "{{ jenkins_java_options }}"
 
 # Nginx proxy configuration.
 nginx_proxy_vhostname: "drupal-jenkins-multisite.example.com"
