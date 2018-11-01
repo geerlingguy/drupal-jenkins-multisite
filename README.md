@@ -33,7 +33,7 @@ In this example, we'll install Jenkins on a DigitalOcean Droplet (a VPS), but yo
 **Guide**:
 
   1. Create a VPS somewhere to which you have root SSH access; choose Ubuntu 16.04 for the OS.
-  2. Create an prod inventory file (e.g. `inventory/prod`) containing the IP address or domain name of the VPS:
+  1. Create an prod inventory file (e.g. `inventory/prod`) containing the IP address or domain name of the VPS:
 
          [jenkins]
          drupal-jenkins-multisite.example.com
@@ -41,7 +41,7 @@ In this example, we'll install Jenkins on a DigitalOcean Droplet (a VPS), but yo
          [jenkins:vars]
          ansible_ssh_user=root
 
-  4. Edit the `vars/secrets.yml` file (with the same command as earlier, but with `edit` instead of `create`), and add the following:
+  1. Edit the `vars/secrets.yml` file (with the same command as earlier, but with `edit` instead of `create`), and add the following:
 
          jenkins_admin_password: [generate a secure random password]
          nginx_proxy_vhostname: "drupal-jenkins-multisite.example.com"
@@ -51,7 +51,8 @@ In this example, we'll install Jenkins on a DigitalOcean Droplet (a VPS), but yo
              domains:
                - "{{ nginx_proxy_vhostname }}"
 
-  3. Run the command: `ansible-playbook -i inventory/prod main.yml --vault-password-file=~/.ansible/drupal-jenkins-vault-password.txt --extra-vars "{certbot_create_standalone_stop_services: []}"`
+  1. Install dependencies: `ansible-galaxy install -r requirements.yml`
+  1. Run the command: `ansible-playbook -i inventory/prod main.yml --vault-password-file=~/.ansible/drupal-jenkins-vault-password.txt --extra-vars "{certbot_create_standalone_stop_services: []}"`
 
 After the playbook completes, you should be able to access the Jenkins server at the IP address or hostname of the server (e.g. https://drupal-jenkins-multisite.jeffgeerling.com/ in the example above).
 
