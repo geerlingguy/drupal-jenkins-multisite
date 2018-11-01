@@ -11,4 +11,3 @@ services:
       - .:/etc/ansible/playbook:rw,delegated
       - ./jenkins_home:/var/lib/jenkins:rw,delegated
     privileged: true
-    command: /lib/systemd/systemd
